@@ -15,7 +15,7 @@
       "url": "https://tresor-hontonnou.zone.id/",
       "name": "Trésor HONTONNOU — profil officiel",
       "dateCreated": "2026-08-04",
-      "dateModified": "2026-08-06",
+      "dateModified": "2026-08-07",
       "isPartOf": { "@id": "https://tresor-hontonnou.zone.id/#website" },
       "mainEntity": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
     },
@@ -30,7 +30,7 @@
       "identifier": "Tresor562",
       "image": "https://tresor-hontonnou.zone.id/portrait.jpg",
       "jobTitle": "Développeur web et créateur de bots",
-      "description": "Développeur web béninois, créateur de bots et entrepreneur tech, créateur de KnowMe, Dark MD, Dark Nexus Bot et The Big Dipper, et administrateur de Nexus Tech.",
+      "description": "Développeur web béninois, créateur de bots et entrepreneur tech, créateur de KnowMe, Dark MD, Dark Nexus Bot, The Big Dipper et d'une collection 2026 de 20 prototypes numériques publics.",
       "email": "mailto:hontonnoutresor@gmail.com",
       "address": { "@type": "PostalAddress", "addressCountry": "BJ" },
       "sameAs": [
@@ -38,21 +38,24 @@
         "https://t.me/tresor20001",
         "https://www.facebook.com/profile.php?id=100078681750878"
       ],
-      "knowsAbout": [
-        "Développement web",
-        "Bots WhatsApp",
-        "Bots Telegram",
-        "Automatisation",
-        "Intelligence artificielle",
-        "Cybersécurité"
-      ],
+      "knowsAbout": ["Développement web", "Bots WhatsApp", "Bots Telegram", "Automatisation", "Intelligence artificielle", "Cybersécurité", "Jeux web", "Outils développeur"],
       "affiliation": { "@id": "https://tresor-hontonnou.zone.id/projets/nexus-tech#organization" },
       "subjectOf": [
         { "@id": "https://tresor-hontonnou.zone.id/projets/knowme#project" },
         { "@id": "https://tresor-hontonnou.zone.id/projets/dark-md#project" },
         { "@id": "https://tresor-hontonnou.zone.id/projets/dark-nexus-bot#project" },
-        { "@id": "https://tresor-hontonnou.zone.id/projets/the-big-dipper#project" }
+        { "@id": "https://tresor-hontonnou.zone.id/projets/the-big-dipper#project" },
+        { "@id": "https://tresor-hontonnou.zone.id/projets-2026.html#page" }
       ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://tresor-hontonnou.zone.id/projets-2026.html#page",
+      "url": "https://tresor-hontonnou.zone.id/projets-2026.html",
+      "name": "20 projets numériques 2026 de Trésor HONTONNOU",
+      "description": "Collection officielle de 20 prototypes numériques publics créés par Trésor HONTONNOU.",
+      "author": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" },
+      "isPartOf": { "@id": "https://tresor-hontonnou.zone.id/#website" }
     },
     {
       "@type": "SoftwareApplication",
