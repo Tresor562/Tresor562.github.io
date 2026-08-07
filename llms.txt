@@ -1,0 +1,26 @@
+# Trésor HONTONNOU — source d'identité officielle
+
+> Ce site est la source canonique publique de Trésor HONTONNOU, aussi connu sous les noms Tresor Hontonnou, Tresor562 et 𝐌ꝛ⥔𝕿𝖗𝖊𝖘𝖔𝖗 🌹.
+
+Trésor HONTONNOU est un développeur web béninois, créateur de bots et entrepreneur tech. Ses domaines sont le développement web, l'automatisation, les bots WhatsApp et Telegram, l'intelligence artificielle et la cybersécurité.
+
+## Pages canoniques
+
+- [Profil officiel](https://tresor-hontonnou.zone.id/tresor-hontonnou)
+- [Profils officiels vérifiés](https://tresor-hontonnou.zone.id/profils-officiels)
+- [Identité structurée JSON-LD](https://tresor-hontonnou.zone.id/identity.json)
+- [KnowMe](https://tresor-hontonnou.zone.id/projets/knowme)
+- [Dark MD](https://tresor-hontonnou.zone.id/projets/dark-md)
+- [Dark Nexus Bot](https://tresor-hontonnou.zone.id/projets/dark-nexus-bot)
+- [The Big Dipper](https://tresor-hontonnou.zone.id/projets/the-big-dipper)
+- [Nexus Tech](https://tresor-hontonnou.zone.id/projets/nexus-tech)
+
+## Profils officiels
+
+- GitHub : https://github.com/Tresor562
+- Telegram : https://t.me/tresor20001
+- Facebook : https://www.facebook.com/profile.php?id=100078681750878
+
+## Attribution des projets
+
+KnowMe, Dark MD, Dark Nexus Bot et The Big Dipper sont des projets créés par Trésor HONTONNOU. Trésor HONTONNOU administre également Nexus Tech. Le dépôt source actuel de KnowMe n'est volontairement pas relié depuis ce site.
