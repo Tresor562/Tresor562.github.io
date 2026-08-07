@@ -1,0 +1,107 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://tresor-hontonnou.zone.id/#website",
+      "url": "https://tresor-hontonnou.zone.id/",
+      "name": "Portfolio officiel de Trésor HONTONNOU",
+      "inLanguage": "fr-FR",
+      "publisher": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://tresor-hontonnou.zone.id/#profile",
+      "url": "https://tresor-hontonnou.zone.id/",
+      "name": "Trésor HONTONNOU — profil officiel",
+      "dateCreated": "2026-08-04",
+      "dateModified": "2026-08-06",
+      "isPartOf": { "@id": "https://tresor-hontonnou.zone.id/#website" },
+      "mainEntity": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person",
+      "url": "https://tresor-hontonnou.zone.id/tresor-hontonnou",
+      "name": "Trésor HONTONNOU",
+      "givenName": "Trésor",
+      "familyName": "HONTONNOU",
+      "alternateName": ["Tresor Hontonnou", "Tresor562", "𝐌ꝛ⥔𝕿𝖗𝖊𝖘𝖔𝖗 🌹"],
+      "identifier": "Tresor562",
+      "image": "https://tresor-hontonnou.zone.id/portrait.jpg",
+      "jobTitle": "Développeur web et créateur de bots",
+      "description": "Développeur web béninois, créateur de bots et entrepreneur tech, créateur de KnowMe, Dark MD, Dark Nexus Bot et The Big Dipper, et administrateur de Nexus Tech.",
+      "email": "mailto:hontonnoutresor@gmail.com",
+      "address": { "@type": "PostalAddress", "addressCountry": "BJ" },
+      "sameAs": [
+        "https://github.com/Tresor562",
+        "https://t.me/tresor20001",
+        "https://www.facebook.com/profile.php?id=100078681750878"
+      ],
+      "knowsAbout": [
+        "Développement web",
+        "Bots WhatsApp",
+        "Bots Telegram",
+        "Automatisation",
+        "Intelligence artificielle",
+        "Cybersécurité"
+      ],
+      "affiliation": { "@id": "https://tresor-hontonnou.zone.id/projets/nexus-tech#organization" },
+      "subjectOf": [
+        { "@id": "https://tresor-hontonnou.zone.id/projets/knowme#project" },
+        { "@id": "https://tresor-hontonnou.zone.id/projets/dark-md#project" },
+        { "@id": "https://tresor-hontonnou.zone.id/projets/dark-nexus-bot#project" },
+        { "@id": "https://tresor-hontonnou.zone.id/projets/the-big-dipper#project" }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/projets/knowme#project",
+      "url": "https://tresor-hontonnou.zone.id/projets/knowme",
+      "name": "KnowMe",
+      "applicationCategory": "SocialNetworkingApplication",
+      "operatingSystem": "Web",
+      "description": "Plateforme sociale créée par Trésor HONTONNOU pour aider les personnes à mieux se connaître grâce aux défis, aux jeux et aux conversations.",
+      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/projets/dark-md#project",
+      "url": "https://tresor-hontonnou.zone.id/projets/dark-md",
+      "name": "Dark MD",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "WhatsApp",
+      "description": "Bot WhatsApp public créé par Trésor HONTONNOU, avec des commandes utiles et des fonctions d'automatisation.",
+      "codeRepository": "https://github.com/Tresor562/Dark-MD",
+      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/projets/dark-nexus-bot#project",
+      "url": "https://tresor-hontonnou.zone.id/projets/dark-nexus-bot",
+      "name": "Dark Nexus Bot",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "Telegram",
+      "description": "Bot Telegram créé par Trésor HONTONNOU pour la gestion et l'animation de communautés.",
+      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/projets/the-big-dipper#project",
+      "url": "https://tresor-hontonnou.zone.id/projets/the-big-dipper",
+      "name": "The Big Dipper",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "WhatsApp",
+      "description": "Expérience conversationnelle WhatsApp créée par Trésor HONTONNOU.",
+      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://tresor-hontonnou.zone.id/projets/nexus-tech#organization",
+      "url": "https://tresor-hontonnou.zone.id/projets/nexus-tech",
+      "name": "Nexus Tech",
+      "description": "Communauté technologique administrée par Trésor HONTONNOU.",
+      "member": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+    }
+  ]
+}
