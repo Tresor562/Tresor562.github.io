@@ -1,0 +1,9 @@
+{
+  "name": "Trésor HONTONNOU — Portfolio officiel",
+  "short_name": "Trésor HONTONNOU",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4efe7",
+  "theme_color": "#74121d",
+  "icons": []
+}
