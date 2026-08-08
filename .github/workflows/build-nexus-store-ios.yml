@@ -1,0 +1,21 @@
+name: Build Nexus Store iOS
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'nexus-store-ios/**'
+      - '.github/workflows/build-nexus-store-ios.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: cd nexus-store-ios && xcodegen generate
+      - name: Build simulator app
+        run: cd nexus-store-ios && xcodebuild -project NexusStore.xcodeproj -scheme NexusStore -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
