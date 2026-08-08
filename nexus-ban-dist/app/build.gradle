@@ -1,0 +1,23 @@
+plugins { id 'com.android.application' }
+
+android {
+  namespace 'com.nexustech.nexusban'
+  compileSdk 35
+  defaultConfig {
+    applicationId 'com.nexustech.nexusban'
+    minSdk 21
+    targetSdk 35
+    versionCode 20001
+    versionName '2.0.1-universal'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+}
