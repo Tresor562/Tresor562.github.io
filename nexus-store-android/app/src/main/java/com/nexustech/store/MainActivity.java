@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -41,6 +42,8 @@ public class MainActivity extends Activity {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         }
 
+        webView.addJavascriptInterface(new NexusAndroidBridge(), "NexusAndroid");
+
         webView.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return handleUrl(request.getUrl().toString());
@@ -56,6 +59,37 @@ public class MainActivity extends Activity {
         });
 
         webView.loadUrl(STORE_URL);
+    }
+
+    public final class NexusAndroidBridge {
+        @JavascriptInterface public long getInstalledVersionCode(String packageName) {
+            if (packageName == null || packageName.trim().isEmpty()) return 0;
+            try {
+                if (packageName.equals(getPackageName())) {
+                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? info.getLongVersionCode() : info.versionCode;
+                }
+                PackageInfo info = getPackageManager().getPackageInfo(packageName, 0);
+                return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? info.getLongVersionCode() : info.versionCode;
+            } catch (Exception ignored) {
+                return 0;
+            }
+        }
+
+        @JavascriptInterface public boolean openApp(String packageName) {
+            try {
+                Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+                if (intent == null) return false;
+                startActivity(intent);
+                return true;
+            } catch (Exception ignored) {
+                return false;
+            }
+        }
+
+        @JavascriptInterface public void installApk(String url) {
+            runOnUiThread(() -> prepareInstall(url));
+        }
     }
 
     private boolean handleUrl(String url) {
