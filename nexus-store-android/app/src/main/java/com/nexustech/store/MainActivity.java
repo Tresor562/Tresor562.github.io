@@ -23,7 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends Activity {
-    private static final String STORE_URL = "https://nexus-store-one-lake.vercel.app/";
+    private static final String STORE_URL = "https://tresor562.github.io/nexus-store/";
     private WebView webView;
 
     @Override public void onCreate(Bundle state) {
