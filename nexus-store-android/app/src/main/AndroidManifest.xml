@@ -3,6 +3,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
+    <queries>
+        <package android:name="com.nexustech.nexusban" />
+    </queries>
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_nexus_store"
