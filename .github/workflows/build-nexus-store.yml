@@ -58,15 +58,16 @@ jobs:
       - name: Sign release APKs
         if: github.event_name != 'pull_request' && env.SIGNING_KEYSTORE_B64 != ''
         run: |
+          APKSIGNER="$ANDROID_HOME/build-tools/35.0.0/apksigner"
           echo "$SIGNING_KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/nexus-release.jks"
-          apksigner sign \
+          "$APKSIGNER" sign \
             --ks "$RUNNER_TEMP/nexus-release.jks" \
             --ks-key-alias "$SIGNING_KEY_ALIAS" \
             --ks-pass "pass:$SIGNING_STORE_PASSWORD" \
             --key-pass "pass:$SIGNING_KEY_PASSWORD" \
             --out nexus-ban-dist/app/build/outputs/apk/release/Nexus-Ban-signed.apk \
             nexus-ban-dist/app/build/outputs/apk/release/app-release-unsigned.apk
-          apksigner sign \
+          "$APKSIGNER" sign \
             --ks "$RUNNER_TEMP/nexus-release.jks" \
             --ks-key-alias "$SIGNING_KEY_ALIAS" \
             --ks-pass "pass:$SIGNING_STORE_PASSWORD" \
@@ -93,8 +94,9 @@ jobs:
 
       - name: Verify APK signatures
         run: |
-          apksigner verify --verbose nexus-store/apps/Nexus-Ban.apk
-          apksigner verify --verbose nexus-store/apps/Nexus-Store.apk
+          APKSIGNER="$ANDROID_HOME/build-tools/35.0.0/apksigner"
+          "$APKSIGNER" verify --verbose nexus-store/apps/Nexus-Ban.apk
+          "$APKSIGNER" verify --verbose nexus-store/apps/Nexus-Store.apk
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
