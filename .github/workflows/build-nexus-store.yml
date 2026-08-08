@@ -37,32 +37,31 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Restore verified Nexus Ban APK
-        run: |
-          mkdir -p nexus-store/apps
-          : > /tmp/Nexus-Ban.apk.b64
-          cat nexus-store/apk-source/chunk-00.txt nexus-store/apk-source/chunk-01.txt nexus-store/apk-source/chunk-02.txt nexus-store/apk-source/chunk-03.txt nexus-store/apk-source/chunk-04.txt nexus-store/apk-source/chunk-05.txt nexus-store/apk-source/chunk-06.txt >> /tmp/Nexus-Ban.apk.b64
-          cat nexus-store/apk-tail/part-00.txt nexus-store/apk-tail/part-01.txt nexus-store/apk-tail/part-02.txt nexus-store/apk-tail/part-03.txt nexus-store/apk-tail/part-04.txt nexus-store/apk-tail/part-05.txt nexus-store/apk-tail/part-06.txt >> /tmp/Nexus-Ban.apk.b64
-          head -c 3000 /dev/zero | tr '\0' 'A' >> /tmp/Nexus-Ban.apk.b64
-          cat nexus-store/apk-tail/part-10.txt nexus-store/apk-tail/part-11.txt >> /tmp/Nexus-Ban.apk.b64
-          test "$(wc -c < /tmp/Nexus-Ban.apk.b64)" = "53264"
-          base64 -d /tmp/Nexus-Ban.apk.b64 > nexus-store/apps/Nexus-Ban.apk
-          echo '74d0827cbb26740c6fc06329037a570ae2d9907f982e008476d69e1999e75c35  nexus-store/apps/Nexus-Ban.apk' | sha256sum -c -
-          unzip -t nexus-store/apps/Nexus-Ban.apk
+      - name: Build Nexus Ban universal APK
+        run: gradle -p nexus-ban-dist :app:assembleDebug --no-daemon
 
       - name: Build Nexus Store Android APK
         run: gradle -p nexus-store-android :app:assembleDebug --no-daemon
 
-      - name: Prepare Nexus Store APK
+      - name: Prepare installable APKs
         run: |
+          mkdir -p nexus-store/apps
+          cp nexus-ban-dist/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Ban.apk
           cp nexus-store-android/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Store.apk
+          unzip -t nexus-store/apps/Nexus-Ban.apk
           unzip -t nexus-store/apps/Nexus-Store.apk
+          if unzip -l nexus-store/apps/Nexus-Ban.apk | grep -E 'lib/[^/]+/.*\.so$'; then
+            echo 'Unexpected native ABI library in Nexus Ban' >&2
+            exit 1
+          fi
 
-      - name: Upload Nexus Store APK artifact
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Nexus-Store-APK
-          path: nexus-store/apps/Nexus-Store.apk
+          name: Nexus-Store-APKs
+          path: |
+            nexus-store/apps/Nexus-Ban.apk
+            nexus-store/apps/Nexus-Store.apk
           if-no-files-found: error
 
       - name: Commit public installable APKs
