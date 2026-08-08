@@ -12,6 +12,12 @@ on:
 permissions:
   contents: write
 
+env:
+  SIGNING_KEYSTORE_B64: ${{ secrets.NEXUS_ANDROID_KEYSTORE_B64 }}
+  SIGNING_KEY_ALIAS: ${{ secrets.NEXUS_ANDROID_KEY_ALIAS }}
+  SIGNING_STORE_PASSWORD: ${{ secrets.NEXUS_ANDROID_STORE_PASSWORD }}
+  SIGNING_KEY_PASSWORD: ${{ secrets.NEXUS_ANDROID_KEY_PASSWORD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,23 +43,58 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Build Nexus Ban universal APK
-        run: gradle -p nexus-ban-dist :app:assembleDebug --no-daemon
+      - name: Build debug APKs
+        if: github.event_name == 'pull_request' || env.SIGNING_KEYSTORE_B64 == ''
+        run: |
+          gradle -p nexus-ban-dist :app:assembleDebug --no-daemon
+          gradle -p nexus-store-android :app:assembleDebug --no-daemon
 
-      - name: Build Nexus Store Android APK
-        run: gradle -p nexus-store-android :app:assembleDebug --no-daemon
+      - name: Build release APKs
+        if: github.event_name != 'pull_request' && env.SIGNING_KEYSTORE_B64 != ''
+        run: |
+          gradle -p nexus-ban-dist :app:assembleRelease --no-daemon
+          gradle -p nexus-store-android :app:assembleRelease --no-daemon
+
+      - name: Sign release APKs
+        if: github.event_name != 'pull_request' && env.SIGNING_KEYSTORE_B64 != ''
+        run: |
+          echo "$SIGNING_KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/nexus-release.jks"
+          apksigner sign \
+            --ks "$RUNNER_TEMP/nexus-release.jks" \
+            --ks-key-alias "$SIGNING_KEY_ALIAS" \
+            --ks-pass "pass:$SIGNING_STORE_PASSWORD" \
+            --key-pass "pass:$SIGNING_KEY_PASSWORD" \
+            --out nexus-ban-dist/app/build/outputs/apk/release/Nexus-Ban-signed.apk \
+            nexus-ban-dist/app/build/outputs/apk/release/app-release-unsigned.apk
+          apksigner sign \
+            --ks "$RUNNER_TEMP/nexus-release.jks" \
+            --ks-key-alias "$SIGNING_KEY_ALIAS" \
+            --ks-pass "pass:$SIGNING_STORE_PASSWORD" \
+            --key-pass "pass:$SIGNING_KEY_PASSWORD" \
+            --out nexus-store-android/app/build/outputs/apk/release/Nexus-Store-signed.apk \
+            nexus-store-android/app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Prepare installable APKs
         run: |
           mkdir -p nexus-store/apps
-          cp nexus-ban-dist/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Ban.apk
-          cp nexus-store-android/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Store.apk
+          if [ -n "$SIGNING_KEYSTORE_B64" ] && [ "${{ github.event_name }}" != "pull_request" ]; then
+            cp nexus-ban-dist/app/build/outputs/apk/release/Nexus-Ban-signed.apk nexus-store/apps/Nexus-Ban.apk
+            cp nexus-store-android/app/build/outputs/apk/release/Nexus-Store-signed.apk nexus-store/apps/Nexus-Store.apk
+          else
+            cp nexus-ban-dist/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Ban.apk
+            cp nexus-store-android/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Store.apk
+          fi
           unzip -t nexus-store/apps/Nexus-Ban.apk
           unzip -t nexus-store/apps/Nexus-Store.apk
           if unzip -l nexus-store/apps/Nexus-Ban.apk | grep -E 'lib/[^/]+/.*\.so$'; then
             echo 'Unexpected native ABI library in Nexus Ban' >&2
             exit 1
           fi
+
+      - name: Verify APK signatures
+        run: |
+          apksigner verify --verbose nexus-store/apps/Nexus-Ban.apk
+          apksigner verify --verbose nexus-store/apps/Nexus-Store.apk
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
@@ -65,7 +106,7 @@ jobs:
           if-no-files-found: error
 
       - name: Commit public installable APKs
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.SIGNING_KEYSTORE_B64 != ''
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -73,6 +114,10 @@ jobs:
           if git diff --cached --quiet; then
             echo 'APKs unchanged'
           else
-            git commit -m 'Publish Nexus Store installable APKs [skip ci]'
+            git commit -m 'Publish signed Nexus Store APKs [skip ci]'
             git push
           fi
+
+      - name: Signing not configured
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.SIGNING_KEYSTORE_B64 == ''
+        run: echo 'Signed APK publication skipped until Nexus Android signing secrets are configured.'
