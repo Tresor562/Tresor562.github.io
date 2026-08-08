@@ -1,0 +1,78 @@
+name: Build Nexus Store
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'nexus-store/apps/*.apk'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android API 35
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.9'
+
+      - name: Build Nexus Ban universal APK
+        run: gradle -p nexus-ban-dist :app:assembleDebug --no-daemon
+
+      - name: Build Nexus Store Android APK
+        run: gradle -p nexus-store-android :app:assembleDebug --no-daemon
+
+      - name: Prepare installable APKs
+        run: |
+          mkdir -p nexus-store/apps
+          cp nexus-ban-dist/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Ban.apk
+          cp nexus-store-android/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Store.apk
+          unzip -t nexus-store/apps/Nexus-Ban.apk
+          unzip -t nexus-store/apps/Nexus-Store.apk
+          if unzip -l nexus-store/apps/Nexus-Ban.apk | grep -E 'lib/[^/]+/.*\.so$'; then
+            echo 'Unexpected native ABI library in Nexus Ban' >&2
+            exit 1
+          fi
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nexus-Store-APKs
+          path: |
+            nexus-store/apps/Nexus-Ban.apk
+            nexus-store/apps/Nexus-Store.apk
+          if-no-files-found: error
+
+      - name: Commit public installable APKs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f nexus-store/apps/Nexus-Ban.apk nexus-store/apps/Nexus-Store.apk
+          if git diff --cached --quiet; then
+            echo 'APKs unchanged'
+          else
+            git commit -m 'Publish Nexus Store installable APKs [skip ci]'
+            git push
+          fi

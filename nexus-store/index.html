@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="Nexus Store — catalogue officiel des applications et expériences de Trésor HONTONNOU / Tresor562." />
+  <title>Nexus Store</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./"><span class="brand-icon">N</span><span>Nexus Store</span></a><button class="avatar" id="profileBtn">T</button></header>
+  <main>
+    <section class="search-wrap"><label class="searchbox"><span>⌕</span><input id="searchInput" type="search" placeholder="Rechercher des applications et des jeux" /></label></section>
+    <nav class="tabs" id="tabs"><button class="tab active" data-filter="all">Pour vous</button><button class="tab" data-filter="app">Applications</button><button class="tab" data-filter="game">Jeux</button><button class="tab" data-filter="dev">Outils</button><button class="tab" data-filter="web">Web</button></nav>
+    <section class="hero-card"><div class="hero-copy"><span class="eyebrow">Sélection Nexus</span><h1>Nexus Ban</h1><p>Outil Android Nexus reconstruit sur une base moderne, sans verrouillage ABI natif.</p><div class="hero-actions"><button class="primary" data-install="nexus-ban">Installer</button><button class="secondary" data-details="nexus-ban">Détails</button></div></div><div class="hero-art"><div class="shield">N</div></div></section>
+    <section class="section-head"><div><h2>Recommandé pour vous</h2><p>Les produits Nexus disponibles ou en préparation.</p></div><button class="text-btn" id="installStoreBtn">Installer Nexus Store</button></section>
+    <section class="app-grid" id="appGrid"></section>
+    <section class="info-card"><div class="info-icon">i</div><div><h3>Installation selon votre appareil</h3><p id="platformInfo">Détection de votre appareil…</p></div></section>
+  </main>
+  <nav class="bottom-nav"><button class="active"><span>⌂</span>Accueil</button><button id="bottomApps"><span>▦</span>Apps</button><button id="bottomSearch"><span>⌕</span>Recherche</button><button id="bottomAbout"><span>ⓘ</span>À propos</button></nav>
+  <dialog class="details" id="detailsDialog"><button class="close" id="closeDialog">×</button><div id="detailsContent"></div></dialog>
+  <dialog class="details" id="iosDialog"><button class="close" data-close-ios>×</button><div class="dialog-copy"><div class="dialog-icon"></div><h2>Installation sur iPhone / iPad</h2><p>Une application Android (.apk) ne peut pas être installée sur iOS. Nexus Store peut cependant fonctionner comme application web ajoutée à l’écran d’accueil. Les versions iOS natives apparaîtront ici lorsqu’elles seront signées et distribuées par une méthode Apple autorisée.</p><ol><li>Ouvre cette page dans Safari.</li><li>Touche le bouton Partager.</li><li>Choisis « Ajouter à l’écran d’accueil ».</li></ol><button class="primary wide" data-close-ios>Compris</button></div></dialog>
+  <footer><b>Nexus Store</b><span>Créé par 𝐌ꝛ⥔𝕿𝖗𝖊𝖘𝖔𝖗 🌹 · Tresor562</span></footer>
+  <script src="./app.js" defer></script>
+</body></html>
