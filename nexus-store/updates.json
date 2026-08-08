@@ -1,0 +1,15 @@
+{
+  "nexus-store": {
+    "androidPackage": "com.nexustech.store",
+    "versionCode": 21000,
+    "version": "2.1.0",
+    "android": "./apps/Nexus-Store.apk",
+    "changelog": "Interface unifiée, fiches enrichies, thème système et gestion des mises à jour."
+  },
+  "nexus-ban": {
+    "androidPackage": "com.nexustech.nexusban",
+    "versionCode": 20001,
+    "version": "2.0.1-universal",
+    "android": "./apps/Nexus-Ban.apk"
+  }
+}
