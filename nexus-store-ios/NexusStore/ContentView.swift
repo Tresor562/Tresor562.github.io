@@ -3,7 +3,7 @@ import WebKit
 
 struct ContentView: View {
     var body: some View {
-        StoreWebView(url: URL(string: "https://nexus-store-one-lake.vercel.app/")!)
+        StoreWebView(url: URL(string: "https://tresor562.github.io/nexus-store/")!)
             .ignoresSafeArea(edges: .bottom)
     }
 }
