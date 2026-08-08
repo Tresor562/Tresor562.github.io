@@ -1,0 +1,30 @@
+name: NexusStore
+options:
+  bundleIdPrefix: com.nexustech
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: 15.0
+targets:
+  NexusStore:
+    type: application
+    platform: iOS
+    sources:
+      - NexusStore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nexustech.store.ios
+        PRODUCT_NAME: Nexus Store
+        SWIFT_VERSION: 5.0
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: NexusStore/Info.plist
+      properties:
+        CFBundleDisplayName: Nexus Store
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
