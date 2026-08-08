@@ -1,0 +1,11 @@
+{
+  "issuer": "https://accounts.example.nexus",
+  "authorization_endpoint": "https://accounts.example.nexus/oauth/authorize",
+  "token_endpoint": "https://accounts.example.nexus/oauth/token",
+  "userinfo_endpoint": "https://accounts.example.nexus/oauth/userinfo",
+  "end_session_endpoint": "https://accounts.example.nexus/logout",
+  "grant_type": "authorization_code",
+  "pkce": "S256",
+  "scopes": ["openid", "profile", "email"],
+  "note": "Exemple de contrat uniquement. Remplacer le domaine et enregistrer chaque application côté fournisseur d'identité avant activation."
+}
