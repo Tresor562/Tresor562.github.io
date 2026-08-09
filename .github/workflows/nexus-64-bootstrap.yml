@@ -1,0 +1,28 @@
+name: Nexus 64 Bootstrap
+
+on:
+  push:
+    branches: [nexus-64-mini-games]
+    paths:
+      - '.nexus64/payload.zip.b64'
+      - '.github/workflows/nexus-64-bootstrap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand Nexus 64 source payload
+        run: |
+          base64 -d .nexus64/payload.zip.b64 > /tmp/nexus64.zip
+          unzip -o /tmp/nexus64.zip -d .
+          rm -rf .nexus64
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add nexus-store/mini-games nexus-mini-games-android .github/workflows/nexus-mini-games.yml .nexus64 || true
+          git commit -m 'feat: expand 64 Nexus mini-games source [skip ci]'
+          git push

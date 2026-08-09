@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#0b0d14">
+  <meta name="description" content="Nexus Tech Mini Games — 64 mini-jeux jouables en solo ou à deux, avec IA, progression et KnowCoins.">
+  <title>Nexus Tech Mini Games — Nexus Store</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <button id="backBtn" class="icon-btn hidden" aria-label="Retour">←</button>
+      <a class="brand" href="../" aria-label="Nexus Store"><span class="brand-mark">N</span><span><b>Nexus Store</b><small>Games</small></span></a>
+      <div class="top-actions">
+        <button id="themeBtn" class="icon-btn" aria-label="Thème">◐</button>
+        <button id="soundBtn" class="icon-btn" aria-label="Son">♪</button>
+        <div class="coins" title="KnowCoins"><span>◈</span><b id="coins">0</b></div>
+      </div>
+    </header>
+
+    <main>
+      <section id="catalogView" class="view active">
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">NEXUS TECH · 64 MINI-JEUX</span>
+            <h1>Une partie.<br><em>Encore une.</em></h1>
+            <p>Jeux rapides, IA adaptative, duel local, progression et KnowCoins.</p>
+            <div class="hero-actions">
+              <button id="quickPlay" class="primary">Jouer maintenant</button>
+              <button id="championshipBtn" class="secondary">Championnat · 5 jeux</button>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+            <span class="hero-glyph">🎮</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-filter="all">Tous</button>
+            <button class="tab" data-filter="vs">2 joueurs</button>
+            <button class="tab" data-filter="solo">Solo</button>
+          </div>
+          <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Rechercher un jeu" autocomplete="off"></label>
+        </div>
+
+        <section class="section-head"><div><span>À découvrir</span><h2>Jeux Nexus Tech</h2></div><button id="difficultyBtn" class="difficulty">IA · Moyen</button></section>
+        <div id="gamesGrid" class="games-grid"></div>
+      </section>
+
+      <section id="detailView" class="view">
+        <div class="detail-wrap">
+          <div id="detailHero" class="detail-hero">
+            <div id="detailIcon" class="detail-icon"></div>
+            <div class="detail-copy"><span id="detailMode" class="eyebrow"></span><h1 id="detailTitle"></h1><p id="detailType"></p><div class="detail-stats"><span>★ 4,8</span><span>Tout public</span><span>Hors ligne</span></div></div>
+            <button id="installBtn" class="primary install">Installer APK</button>
+          </div>
+          <div class="screenshots" id="screenshots"></div>
+          <div class="detail-grid">
+            <article class="panel"><h3>À propos</h3><p id="detailAbout"></p></article>
+            <article class="panel"><h3>Modes</h3><div id="detailFeatures" class="feature-list"></div></article>
+          </div>
+          <div class="play-cta"><button id="playWebBtn" class="primary">Jouer</button><button id="shareBtn" class="secondary">Partager</button></div>
+        </div>
+      </section>
+
+      <section id="gameView" class="view game-view">
+        <div class="game-head">
+          <div><span id="gameMode" class="eyebrow"></span><h2 id="gameTitle"></h2></div>
+          <div class="score-strip"><div><small id="p1Label">ROUGE</small><b id="p1Score">0</b></div><span id="timer">30</span><div><small id="p2Label">BLEU</small><b id="p2Score">0</b></div></div>
+        </div>
+        <div id="gameStage" class="game-stage"><canvas id="gameCanvas"></canvas><div id="gameOverlay" class="game-overlay hidden"></div></div>
+        <div id="gameControls" class="game-controls"></div>
+        <div id="tutorial" class="tutorial hidden"></div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
