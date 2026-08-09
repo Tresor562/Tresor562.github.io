@@ -1,0 +1,62 @@
+name: Nexus Games Android Distribution
+
+on:
+  push:
+    branches:
+      - nexus-games-android-release
+    paths:
+      - '.github/nexus-games-android-release-trigger.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: nexus-games-android-release
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build Nexus Games APK
+        shell: bash
+        run: |
+          rm -rf .mobile-build
+          mkdir -p .mobile-build/www
+          cp -R nexus-store/play/. .mobile-build/www/
+          cd .mobile-build
+          cat > package.json <<'JSON'
+          {"name":"nexus-games-mobile","private":true,"version":"1.0.0","dependencies":{"@capacitor/core":"7.4.0"},"devDependencies":{"@capacitor/cli":"7.4.0","@capacitor/android":"7.4.0"}}
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {"appId":"tech.nexus.games","appName":"Nexus Games","webDir":"www","server":{"androidScheme":"https"}}
+          JSON
+          npm install --no-audit --no-fund
+          npx cap add android
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+      - name: Publish APK on distribution branch
+        shell: bash
+        run: |
+          mkdir -p nexus-store/apps
+          cp .mobile-build/android/app/build/outputs/apk/debug/app-debug.apk nexus-store/apps/Nexus-Games.apk
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add nexus-store/apps/Nexus-Games.apk
+          if ! git diff --cached --quiet; then
+            git commit -m 'release: publish Nexus Games Android APK'
+            git push origin HEAD:nexus-games-android-release
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nexus-Games-Android-APK
+          path: nexus-store/apps/Nexus-Games.apk
