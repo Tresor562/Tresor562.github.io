@@ -1,0 +1,1 @@
+(()=>{const m=localStorage.getItem('nexus.theme')||'system';const t=m==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;})();
