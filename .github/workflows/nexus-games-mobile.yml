@@ -1,0 +1,88 @@
+name: Nexus Games Mobile Build
+
+on:
+  pull_request:
+    paths:
+      - 'nexus-store/play/**'
+      - '.github/workflows/nexus-games-mobile.yml'
+      - '.github/nexus-games-build-trigger.txt'
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: nexus-store/play/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Prepare Capacitor project
+        shell: bash
+        run: |
+          rm -rf .mobile-build
+          mkdir -p .mobile-build/www
+          cp -R nexus-store/play/. .mobile-build/www/
+          cd .mobile-build
+          cat > package.json <<'JSON'
+          {"name":"nexus-games-mobile","private":true,"version":"1.0.0","dependencies":{"@capacitor/core":"7.4.0"},"devDependencies":{"@capacitor/cli":"7.4.0","@capacitor/android":"7.4.0"}}
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {"appId":"tech.nexus.games","appName":"Nexus Games","webDir":"www","server":{"androidScheme":"https"}}
+          JSON
+          npm install --no-audit --no-fund
+          npx cap add android
+          npx cap sync android
+      - name: Build Android APK
+        shell: bash
+        run: |
+          cd .mobile-build/android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nexus-Games-Android-APK
+          path: .mobile-build/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+  ios-simulator:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare Capacitor iOS project
+        shell: bash
+        run: |
+          rm -rf .mobile-build
+          mkdir -p .mobile-build/www
+          cp -R nexus-store/play/. .mobile-build/www/
+          cd .mobile-build
+          cat > package.json <<'JSON'
+          {"name":"nexus-games-mobile","private":true,"version":"1.0.0","dependencies":{"@capacitor/core":"7.4.0"},"devDependencies":{"@capacitor/cli":"7.4.0","@capacitor/ios":"7.4.0"}}
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {"appId":"tech.nexus.games","appName":"Nexus Games","webDir":"www"}
+          JSON
+          npm install --no-audit --no-fund
+          npx cap add ios
+          npx cap sync ios
+      - name: Build iOS simulator app
+        shell: bash
+        run: |
+          cd .mobile-build
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build
+          APP_PATH="$(find ios-build/Build/Products -type d -name 'App.app' | head -1)"
+          test -n "$APP_PATH"
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" Nexus-Games-iOS-Simulator.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nexus-Games-iOS-Simulator
+          path: .mobile-build/Nexus-Games-iOS-Simulator.zip
+          if-no-files-found: error
