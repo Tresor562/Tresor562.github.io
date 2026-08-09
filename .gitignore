@@ -1,0 +1,11 @@
+# Private signing material
+nexus-signing/
+*.jks
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+
+# Local Apple/Xcode state
+DerivedData/
+*.xcuserdata/
