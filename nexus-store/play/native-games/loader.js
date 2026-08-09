@@ -1,4 +1,4 @@
-const loaders=new Map([
+const bespoke=new Map([
   [28,()=>import('./28-four-in-a-row-duel.js')],
   [30,()=>import('./30-tic-tac-clash.js')],
   [31,()=>import('./31-melon-target-challenge.js')],
@@ -17,14 +17,9 @@ const loaders=new Map([
   [58,()=>import('./58-save-the-line-puzzle.js')],
   [64,()=>import('./64-blow-it-up-chain.js')],
 ]);
-
+const genericLoader=id=>()=>import('./universal-native.js').then(mod=>({createGame:env=>mod.createConfiguredNativeGame(env,id)}));
+const loaders=new Map(bespoke);
+for(let id=1;id<=64;id++)if(!loaders.has(id))loaders.set(id,genericLoader(id));
 export const nativeGameIds=new Set(loaders.keys());
 export const isNativeGame=id=>nativeGameIds.has(Number(id));
-
-export async function loadNativeGame(id){
-  const load=loaders.get(Number(id));
-  if(!load)return null;
-  const mod=await load();
-  if(typeof mod.createGame!=='function')throw new TypeError(`Native game ${id} does not export createGame()`);
-  return mod.createGame;
-}
+export async function loadNativeGame(id){const load=loaders.get(Number(id));if(!load)return null;const mod=await load();if(typeof mod.createGame!=='function')throw new TypeError(`Native game ${id} does not export createGame()`);return mod.createGame}
