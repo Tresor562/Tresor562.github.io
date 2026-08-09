@@ -11,6 +11,7 @@
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_nexus_store"
+        android:roundIcon="@drawable/ic_nexus_store"
         android:label="Nexus Store"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
