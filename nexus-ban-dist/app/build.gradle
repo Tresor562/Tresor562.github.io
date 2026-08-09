@@ -7,8 +7,8 @@ android {
     applicationId 'com.nexustech.nexusban'
     minSdk 21
     targetSdk 35
-    versionCode 20001
-    versionName '2.0.1-universal'
+    versionCode 20002
+    versionName '2.0.2-universal'
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
