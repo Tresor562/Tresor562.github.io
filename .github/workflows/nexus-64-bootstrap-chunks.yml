@@ -2,7 +2,7 @@ name: Nexus 64 Bootstrap Chunks
 
 on:
   push:
-    branches: [nexus-64-mini-games]
+    branches: [main]
     paths:
       - '.nexus64/**'
       - '.github/workflows/nexus-64-bootstrap-chunks.yml'
