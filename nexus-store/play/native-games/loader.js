@@ -1,9 +1,13 @@
 const loaders=new Map([
   [28,()=>import('./28-four-in-a-row-duel.js')],
   [30,()=>import('./30-tic-tac-clash.js')],
+  [42,()=>import('./42-memory-flip-clash.js')],
+  [49,()=>import('./49-nail-pull-puzzle.js')],
   [52,()=>import('./52-pop-it-fever.js')],
+  [53,()=>import('./53-block-blast-quest.js')],
   [55,()=>import('./55-color-sort-master.js')],
   [56,()=>import('./56-tower-stack-challenge.js')],
+  [58,()=>import('./58-save-the-line-puzzle.js')],
 ]);
 
 export const nativeGameIds=new Set(loaders.keys());
