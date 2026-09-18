@@ -1,0 +1,22 @@
+name: NexControl Vercel credential probe
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/nexcontrol-vercel-probe.yml']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check credential presence
+        env:
+          V1: ${{ secrets.VERCEL_TOKEN }}
+          V2: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: |
+          if [ -n "${V1:-}" ] || [ -n "${V2:-}" ]; then
+            echo "VERCEL_CREDENTIAL_PRESENT"
+          else
+            echo "VERCEL_CREDENTIAL_MISSING"
+            exit 3
+          fi
