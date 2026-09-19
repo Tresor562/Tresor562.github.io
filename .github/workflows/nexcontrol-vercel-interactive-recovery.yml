@@ -1,0 +1,63 @@
+name: NexControl Vercel interactive recovery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/nexcontrol-vercel-interactive-recovery.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Start Vercel device flow and publish code
+        shell: bash
+        run: |
+          set -euo pipefail
+          LOG=/tmp/vercel-login.log
+          : > "$LOG"
+          script -q -f -c "npx --yes vercel@latest login" "$LOG" &
+          PID=$!
+          SENT=0
+          for i in {1..60}; do
+            sleep 1
+            if grep -Eqi 'vercel\.com|device|code|login' "$LOG"; then
+              CLEAN="$(sed -r 's/\x1B\[[0-9;?]*[ -\/]*[@-~]//g' "$LOG" | tail -c 16000)"
+              PAYLOAD="$(printf 'VERCEL_DEVICE_RECOVERY\n%s' "$CLEAN")"
+              curl -fsS -X POST \
+                'https://ojbyvjqurlamplmujmyu.supabase.co/functions/v1/nxc-device-ingest' \
+                -H 'Content-Type: text/plain' \
+                --data-binary "$PAYLOAD" >/dev/null
+              SENT=1
+              break
+            fi
+          done
+          if [ "$SENT" -ne 1 ]; then
+            kill "$PID" || true
+            echo "Could not capture Vercel device flow output"
+            exit 4
+          fi
+          wait "$PID"
+
+      - name: Deploy NexControl proxy to production
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes vercel@latest whoami
+          git clone --depth 1 https://github.com/Nexus-tech-01/NexTelegrambots.git /tmp/nexus
+          cd /tmp/nexus/nexcontrol
+          mkdir -p .vercel
+          printf '{"orgId":"team_DeK4L6JW10CIXpHARpkMQQr8","projectId":"prj_SNuxI5eg0byszLYtXTfPXZC3S5VK"}\n' > .vercel/project.json
+          npx --yes vercel@latest deploy --prod --yes
+
+      - name: Verify live control link
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..18}; do
+            BODY="$(curl -fsS --max-time 20 https://nexcontrol-ochre.vercel.app/api/health || true)"
+            echo "$BODY"
+            if echo "$BODY" | grep -q '"version":"61.12-control-link"'; then exit 0; fi
+            sleep 5
+          done
+          exit 1
