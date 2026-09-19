@@ -36,6 +36,12 @@ button{appearance:none;border:0;border-radius:14px;padding:14px 17px;font-weight
       <div class="statusrow"><span id="readerPill" class="pill warn">● Vérification…</span><span id="readerWho" class="who">Chargement</span></div>
       <p id="readerInfo" class="muted">Connexion à NexControl…</p>
 
+      <form id="adminForm" class="hidden">
+        <label for="adminPassword">Mot de passe NexControl</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Mot de passe administrateur" required>
+        <button type="submit">Ouvrir le Watcher</button>
+      </form>
+
       <form id="phoneForm" class="hidden">
         <label for="phone">Numéro Telegram</label>
         <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+229 01 00 00 00 00" required>
@@ -72,12 +78,12 @@ button{appearance:none;border:0;border-radius:14px;padding:14px 17px;font-weight
 const API='https://nexcontrol-ochre.vercel.app';
 const qs=s=>document.querySelector(s);
 const pill=qs('#readerPill'),who=qs('#readerWho'),info=qs('#readerInfo'),out=qs('#out');
-const phoneForm=qs('#phoneForm'),codeForm=qs('#codeForm'),passwordForm=qs('#passwordForm'),disconnectBtn=qs('#disconnectBtn');
+const adminForm=qs('#adminForm'),phoneForm=qs('#phoneForm'),codeForm=qs('#codeForm'),passwordForm=qs('#passwordForm'),disconnectBtn=qs('#disconnectBtn');
 let authId='';
 
 const hashToken=location.hash.startsWith('#token=')?decodeURIComponent(location.hash.slice(7)):'';
 if(hashToken){sessionStorage.setItem('nxc_watcher_token',hashToken);history.replaceState(null,'',location.pathname+location.search)}
-const token=sessionStorage.getItem('nxc_watcher_token')||'';
+let token=sessionStorage.getItem('nxc_watcher_token')||'';
 
 function show(el,on=true){el.classList.toggle('hidden',!on)}
 function setBusy(form,busy){
@@ -98,8 +104,13 @@ async function api(path,opt={}){
 }
 async function status(){
   if(!token){
-    pill.className='pill bad';pill.textContent='○ Session manquante';who.textContent='Accès expiré';info.textContent='Rouvre cette page depuis NexControl.';return;
+    pill.className='pill warn';pill.textContent='● Authentification';who.textContent='NexControl';
+    info.textContent='Entre ton mot de passe NexControl pour ouvrir cette interface sécurisée.';
+    show(adminForm,true);show(phoneForm,false);show(codeForm,false);show(passwordForm,false);show(disconnectBtn,false);
+    qs('#botState').textContent='Connexion requise';
+    return;
   }
+  show(adminForm,false);
   try{
     const x=await api('/api/watcher/status');
     qs('#botState').textContent=x.bot?.online?'En ligne':'Hors ligne';
@@ -132,6 +143,22 @@ async function action(kind,payload){
   const x=await api('/api/watcher/action',{method:'POST',body:JSON.stringify({kind,payload})});
   return waitJob(x.jobId);
 }
+
+adminForm.addEventListener('submit',async e=>{
+  e.preventDefault();setBusy(adminForm,true);
+  try{
+    const r=await fetch(API+'/api/watcher/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({password:qs('#adminPassword').value})});
+    const x=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(x.error==='invalid_password'?'Mot de passe NexControl incorrect.':(x.error||'Connexion refusée.'));
+    token=x.token||'';
+    if(!token)throw new Error('Jeton NexControl manquant.');
+    sessionStorage.setItem('nxc_watcher_token',token);
+    qs('#adminPassword').value='';
+    out.textContent='NexControl connecté.';
+    await status();
+  }catch(err){out.textContent='Erreur : '+err.message}
+  finally{setBusy(adminForm,false)}
+});
 
 phoneForm.addEventListener('submit',async e=>{
   e.preventDefault();setBusy(phoneForm,true);
