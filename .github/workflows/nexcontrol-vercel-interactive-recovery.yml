@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Start Vercel device flow and publish code
+      - name: Start Vercel device flow and stream snapshots
         shell: bash
         run: |
           set -euo pipefail
@@ -18,25 +18,16 @@ jobs:
           : > "$LOG"
           script -q -f -c "npx --yes vercel@latest login" "$LOG" &
           PID=$!
-          SENT=0
-          for i in {1..60}; do
-            sleep 1
-            if grep -Eqi 'vercel\.com|device|code|login' "$LOG"; then
-              CLEAN="$(sed -r 's/\x1B\[[0-9;?]*[ -\/]*[@-~]//g' "$LOG" | tail -c 16000)"
-              PAYLOAD="$(printf 'VERCEL_DEVICE_RECOVERY\n%s' "$CLEAN")"
-              curl -fsS -X POST \
-                'https://ojbyvjqurlamplmujmyu.supabase.co/functions/v1/nxc-device-ingest' \
-                -H 'Content-Type: text/plain' \
-                --data-binary "$PAYLOAD" >/dev/null
-              SENT=1
-              break
-            fi
+          for i in {1..120}; do
+            sleep 3
+            CLEAN="$(sed -r 's/\x1B\[[0-9;?]*[ -\/]*[@-~]//g' "$LOG" | tail -c 16000)"
+            PAYLOAD="$(printf 'VERCEL_DEVICE_RECOVERY\n%s' "$CLEAN")"
+            curl -fsS -X POST \
+              'https://ojbyvjqurlamplmujmyu.supabase.co/functions/v1/nxc-device-ingest' \
+              -H 'Content-Type: text/plain' \
+              --data-binary "$PAYLOAD" >/dev/null || true
+            if ! kill -0 "$PID" 2>/dev/null; then break; fi
           done
-          if [ "$SENT" -ne 1 ]; then
-            kill "$PID" || true
-            echo "Could not capture Vercel device flow output"
-            exit 4
-          fi
           wait "$PID"
 
       - name: Deploy NexControl proxy to production
@@ -54,7 +45,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for i in {1..18}; do
+          for i in {1..24}; do
             BODY="$(curl -fsS --max-time 20 https://nexcontrol-ochre.vercel.app/api/health || true)"
             echo "$BODY"
             if echo "$BODY" | grep -q '"version":"61.12-control-link"'; then exit 0; fi
