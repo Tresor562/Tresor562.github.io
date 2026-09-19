@@ -19,9 +19,8 @@ h1{font-size:clamp(34px,8vw,70px);line-height:.95;margin:0 0 14px;letter-spacing
 .who{font-size:20px;font-weight:800}.muted{color:var(--muted);line-height:1.6;font-size:14px}
 label{display:block;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-size:10px;font-weight:800;margin:22px 0 9px}
 input{width:100%;background:#0d0d0f;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:15px;font-size:16px;outline:none}input:focus{border-color:#666;box-shadow:0 0 0 4px rgba(255,255,255,.04)}
-button,.button{display:inline-flex;align-items:center;justify-content:center;appearance:none;border:0;border-radius:14px;padding:14px 17px;font-weight:800;font-size:14px;cursor:pointer;background:#f4f4f5;color:#09090a;margin-top:12px;text-decoration:none}.secondary{background:#222227!important;color:var(--text)!important;border:1px solid var(--line)!important}button:disabled{opacity:.55;cursor:not-allowed}
+button{appearance:none;border:0;border-radius:14px;padding:14px 17px;font-weight:800;font-size:14px;cursor:pointer;background:#f4f4f5;color:#09090a;margin-top:12px}button.secondary{background:#222227;color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.55;cursor:not-allowed}
 .result{min-height:20px;margin-top:16px;font-size:13px;color:var(--muted);white-space:pre-wrap}.rule{display:grid;gap:18px}.k{text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-size:10px;font-weight:800}.v{font-size:23px;font-weight:850;letter-spacing:-.03em}.sep{height:1px;background:var(--line)}.small{font-size:12px}.hidden{display:none!important}
-.loginbox{margin-top:14px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#0d0d0f}.telegramLink{width:100%;font-size:16px;padding:16px 18px}
 @media(max-width:780px){.wrap{width:min(100% - 20px,1120px);padding-top:18px}.top{margin-bottom:24px}.grid{grid-template-columns:1fr}.card{padding:20px;border-radius:18px}h1{font-size:46px}}
 </style>
 </head>
@@ -30,7 +29,7 @@ button,.button{display:inline-flex;align-items:center;justify-content:center;app
   <header class="top"><div class="brand">NEXCONTROL</div><a class="back" href="https://nexcontrol-ochre.vercel.app/">Retour à NexControl</a></header>
   <div class="eyebrow">NexCanal · Telegram Reader</div>
   <h1>Channel Watcher</h1>
-  <p class="lead">Connecte un compte Telegram lecteur une seule fois. Aucun code SMS n’est nécessaire : NexControl génère un lien de connexion Telegram temporaire à approuver dans l’application.</p>
+  <p class="lead">Connecte le compte lecteur avec ton numéro Telegram. Telegram enverra ensuite un code de connexion dans l’application. Si la double authentification est activée, NexControl te demandera aussi le mot de passe 2FA.</p>
 
   <section class="grid">
     <article class="card">
@@ -44,14 +43,23 @@ button,.button{display:inline-flex;align-items:center;justify-content:center;app
         <button type="submit">Ouvrir le Watcher</button>
       </form>
 
-      <div id="connectBox" class="hidden">
-        <button id="startBtn" type="button">Créer le lien Telegram</button>
-        <div id="approvalBox" class="loginbox hidden">
-          <div class="muted">Appuie sur le bouton ci-dessous. Telegram s’ouvrira et te demandera d’autoriser la nouvelle session.</div>
-          <a id="telegramLink" class="button telegramLink" href="#">Ouvrir Telegram</a>
-          <div class="muted small" style="margin-top:10px">Le lien expire rapidement. NexControl le renouvelle automatiquement si nécessaire.</div>
-        </div>
-      </div>
+      <form id="phoneForm" class="hidden">
+        <label for="phone">Numéro Telegram</label>
+        <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+229 01 00 00 00 00" required>
+        <button type="submit">Envoyer le code Telegram</button>
+      </form>
+
+      <form id="codeForm" class="hidden">
+        <label for="code">Code reçu dans Telegram</label>
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" placeholder="12345" required>
+        <button type="submit">Valider le code</button>
+      </form>
+
+      <form id="passwordForm" class="hidden">
+        <label for="tgPassword">Mot de passe Telegram 2FA</label>
+        <input id="tgPassword" type="password" autocomplete="current-password" placeholder="Mot de passe 2FA" required>
+        <button type="submit">Terminer la connexion</button>
+      </form>
 
       <div id="out" class="result"></div>
       <button id="disconnectBtn" type="button" class="secondary hidden">Déconnecter le lecteur</button>
@@ -71,15 +79,15 @@ button,.button{display:inline-flex;align-items:center;justify-content:center;app
 const API='https://nexcontrol-ochre.vercel.app';
 const qs=s=>document.querySelector(s);
 const pill=qs('#readerPill'),who=qs('#readerWho'),info=qs('#readerInfo'),out=qs('#out');
-const adminForm=qs('#adminForm'),connectBox=qs('#connectBox'),startBtn=qs('#startBtn'),approvalBox=qs('#approvalBox'),telegramLink=qs('#telegramLink'),disconnectBtn=qs('#disconnectBtn');
-let authId='',pollTimer=null;
+const adminForm=qs('#adminForm'),phoneForm=qs('#phoneForm'),codeForm=qs('#codeForm'),passwordForm=qs('#passwordForm'),disconnectBtn=qs('#disconnectBtn');
+let authId='';
 
 const hashToken=location.hash.startsWith('#token=')?decodeURIComponent(location.hash.slice(7)):'';
 if(hashToken){sessionStorage.setItem('nxc_watcher_token',hashToken);history.replaceState(null,'',location.pathname+location.search)}
 let token=sessionStorage.getItem('nxc_watcher_token')||'';
 
 function show(el,on=true){el.classList.toggle('hidden',!on)}
-function busy(btn,on,label='Connexion…'){if(!btn.dataset.label)btn.dataset.label=btn.textContent;btn.disabled=on;btn.textContent=on?label:btn.dataset.label}
+function busy(form,on){const b=form?.querySelector('button');if(!b)return;if(!b.dataset.label)b.dataset.label=b.textContent;b.disabled=on;b.textContent=on?'Connexion…':b.dataset.label}
 async function api(path,opt={}){
   const headers={...(opt.headers||{}),'authorization':'Bearer '+token};
   if(opt.body&&!headers['content-type'])headers['content-type']='application/json';
@@ -90,13 +98,13 @@ async function api(path,opt={}){
   return x;
 }
 async function waitJob(jobId){
-  for(let i=0;i<45;i++){
+  for(let i=0;i<55;i++){
     await new Promise(r=>setTimeout(r,750));
     const x=await api('/api/watcher/job?id='+encodeURIComponent(jobId));
     if(x.job?.status==='done')return x.job.result||{};
-    if(x.job?.status==='failed')throw new Error(x.job.error||'La tâche Telegram a échoué.');
+    if(x.job?.status==='failed')throw new Error(x.job.error||'La connexion Telegram a échoué.');
   }
-  throw new Error('Le serveur Telegram Reader ne répond pas.');
+  throw new Error('Le Telegram Reader ne répond pas à temps.');
 }
 async function action(kind,payload={}){
   const x=await api('/api/watcher/action',{method:'POST',body:JSON.stringify({kind,payload})});
@@ -106,7 +114,7 @@ async function pageStatus(){
   if(!token){
     pill.className='pill warn';pill.textContent='● Authentification';who.textContent='NexControl';
     info.textContent='Entre ton mot de passe NexControl pour ouvrir cette interface sécurisée.';
-    show(adminForm,true);show(connectBox,false);show(disconnectBtn,false);qs('#botState').textContent='Connexion requise';return;
+    show(adminForm,true);show(phoneForm,false);show(codeForm,false);show(passwordForm,false);show(disconnectBtn,false);qs('#botState').textContent='Connexion requise';return;
   }
   show(adminForm,false);
   try{
@@ -115,34 +123,20 @@ async function pageStatus(){
     if(x.reader?.connected){
       pill.className='pill ok';pill.textContent='● Connected';
       who.textContent=x.reader.username?'@'+String(x.reader.username).replace(/^@/,''):(x.reader.phone||'Compte Telegram');
-      info.textContent='Le compte lecteur est connecté et la session est conservée côté serveur.';
-      show(connectBox,false);show(disconnectBtn,true);show(approvalBox,false);
+      info.textContent='Le compte lecteur est connecté. La session est conservée côté serveur.';
+      show(phoneForm,false);show(codeForm,false);show(passwordForm,false);show(disconnectBtn,true);
     }else{
       pill.className='pill bad';pill.textContent='○ Not connected';who.textContent='Aucun compte lecteur';
-      info.textContent='Crée un lien Telegram puis approuve la connexion dans l’application.';
-      show(connectBox,true);show(disconnectBtn,false);
+      info.textContent='Entre le numéro du compte Telegram à utiliser comme lecteur.';
+      show(phoneForm,true);show(codeForm,false);show(passwordForm,false);show(disconnectBtn,false);
     }
   }catch(e){
     pill.className='pill bad';pill.textContent='○ Erreur';who.textContent='Connexion impossible';info.textContent=e.message;
   }
 }
-async function pollQr(){
-  if(!authId)return;
-  try{
-    const x=await action('reader.qr.status',{authId});
-    if(x.connected){
-      out.textContent='Compte Telegram connecté.';
-      authId='';clearTimeout(pollTimer);await pageStatus();return;
-    }
-    if(x.state==='error'){out.textContent='Erreur Telegram : '+(x.error||'connexion impossible');return}
-    if(x.state==='expired'){out.textContent='Le lien a expiré. Crée-en un nouveau.';show(approvalBox,false);authId='';return}
-    if(x.loginUrl)telegramLink.href=x.loginUrl;
-  }catch(e){out.textContent='Vérification : '+e.message}
-  pollTimer=setTimeout(pollQr,2200);
-}
 
 adminForm.addEventListener('submit',async e=>{
-  e.preventDefault();busy(adminForm.querySelector('button'),true);
+  e.preventDefault();busy(adminForm,true);
   try{
     const r=await fetch(API+'/api/watcher/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({password:qs('#adminPassword').value})});
     const x=await r.json().catch(()=>({}));
@@ -150,26 +144,52 @@ adminForm.addEventListener('submit',async e=>{
     token=x.token||'';if(!token)throw new Error('Jeton NexControl manquant.');
     sessionStorage.setItem('nxc_watcher_token',token);qs('#adminPassword').value='';out.textContent='NexControl connecté.';await pageStatus();
   }catch(err){out.textContent='Erreur : '+err.message}
-  finally{busy(adminForm.querySelector('button'),false)}
+  finally{busy(adminForm,false)}
 });
 
-startBtn.addEventListener('click',async()=>{
-  busy(startBtn,true,'Création du lien…');out.textContent='Connexion à Telegram…';
+phoneForm.addEventListener('submit',async e=>{
+  e.preventDefault();busy(phoneForm,true);out.textContent='Demande du code à Telegram…';
   try{
-    const x=await action('reader.qr.start',{});
-    authId=x.authId||'';if(!authId||!x.loginUrl)throw new Error('Lien Telegram non reçu.');
-    telegramLink.href=x.loginUrl;show(approvalBox,true);out.textContent='Lien prêt. Ouvre Telegram et autorise la session.';
-    clearTimeout(pollTimer);pollTimer=setTimeout(pollQr,1500);
+    const x=await action('reader.auth.start',{phone:qs('#phone').value.trim()});
+    authId=x.authId||'';
+    if(!authId)throw new Error('Identifiant de connexion manquant.');
+    show(phoneForm,false);show(codeForm,true);show(passwordForm,false);
+    out.textContent='Code envoyé par Telegram. Entre-le ici.';
+    qs('#code').focus();
   }catch(err){out.textContent='Erreur : '+err.message}
-  finally{busy(startBtn,false)}
+  finally{busy(phoneForm,false)}
+});
+
+codeForm.addEventListener('submit',async e=>{
+  e.preventDefault();busy(codeForm,true);
+  try{
+    const x=await action('reader.auth.code',{authId,code:qs('#code').value.trim()});
+    if(x.needsPassword){
+      show(codeForm,false);show(passwordForm,true);out.textContent='La double authentification Telegram est active. Entre ton mot de passe 2FA.';qs('#tgPassword').focus();return;
+    }
+    if(x.retryCode){out.textContent=x.error||'Code refusé par Telegram. Vérifie le code et réessaie.';return}
+    if(x.connected){out.textContent='Compte Telegram connecté.';await pageStatus();return}
+    out.textContent='Réponse Telegram inattendue.';
+  }catch(err){out.textContent='Erreur : '+err.message}
+  finally{busy(codeForm,false)}
+});
+
+passwordForm.addEventListener('submit',async e=>{
+  e.preventDefault();busy(passwordForm,true);
+  try{
+    const x=await action('reader.auth.password',{authId,password:qs('#tgPassword').value});
+    if(x.connected){out.textContent='Compte Telegram connecté.';await pageStatus();return}
+    out.textContent=x.error||'Réponse Telegram inattendue.';
+  }catch(err){out.textContent='Erreur : '+err.message}
+  finally{busy(passwordForm,false)}
 });
 
 disconnectBtn.addEventListener('click',async()=>{
   if(!confirm('Déconnecter le compte lecteur ?'))return;
-  busy(disconnectBtn,true,'Déconnexion…');
-  try{await action('reader.qr.disconnect',{});out.textContent='Compte lecteur déconnecté.';await pageStatus()}
+  disconnectBtn.disabled=true;
+  try{await action('reader.auth.disconnect',{});out.textContent='Compte lecteur déconnecté.';await pageStatus()}
   catch(err){out.textContent='Erreur : '+err.message}
-  finally{busy(disconnectBtn,false)}
+  finally{disconnectBtn.disabled=false}
 });
 
 pageStatus();
