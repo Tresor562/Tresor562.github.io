@@ -5,6 +5,11 @@ on:
     branches: [ main ]
   push:
     branches: [ main ]
+    paths:
+      - 'nexus-store/**'
+      - 'nexus-ban-dist/**'
+      - 'nexus-store-android/**'
+      - '.github/workflows/build-nexus-store.yml'
     paths-ignore:
       - 'nexus-store/apps/*.apk'
   workflow_dispatch:
