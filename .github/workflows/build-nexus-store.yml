@@ -7,11 +7,10 @@ on:
     branches: [ main ]
     paths:
       - 'nexus-store/**'
+      - '!nexus-store/apps/*.apk'
       - 'nexus-ban-dist/**'
       - 'nexus-store-android/**'
       - '.github/workflows/build-nexus-store.yml'
-    paths-ignore:
-      - 'nexus-store/apps/*.apk'
   workflow_dispatch:
 
 permissions:
