@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow">
+  <title>NexForge × GitHub</title>
+  <style>
+    :root{--bg:#06080d;--panel:#0e1420;--panel2:#111a29;--line:#22304a;--text:#f5f7fb;--muted:#95a2b8;--blue:#2f81f7;--blue2:#6bacff;--ok:#55d38a;--warn:#f0b35d;--danger:#ff7788}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#06080d;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100vh;background:radial-gradient(900px 520px at 50% -120px,#172b4c 0,#0a0e16 46%,#06080d 78%);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+    .wrap{width:min(780px,calc(100% - 28px));margin:0 auto;padding:54px 0 70px}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:32px}.mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#176fe9,#7cb8ff);box-shadow:0 0 34px rgba(47,129,247,.3);font-weight:950;font-size:20px}.brand span{font-weight:850;letter-spacing:-.02em}
+    h1{font-size:clamp(34px,8vw,58px);line-height:1.02;letter-spacing:-.05em;margin:0 0 16px}.lead{font-size:17px;line-height:1.68;color:var(--muted);margin:0 0 28px;max-width:690px}
+    .grid{display:grid;gap:14px}.card{background:linear-gradient(180deg,rgba(17,26,41,.96),rgba(11,17,27,.98));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+    .row{display:flex;gap:18px;align-items:center;justify-content:space-between}.name{font-size:18px;font-weight:850}.sub{font-size:14px;color:var(--muted);line-height:1.5;margin-top:5px}
+    .pill{display:inline-flex;align-items:center;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:850;white-space:nowrap}.ok{color:var(--ok);border:1px solid rgba(85,211,138,.28);background:rgba(85,211,138,.09)}.no{color:var(--warn);border:1px solid rgba(240,179,93,.28);background:rgba(240,179,93,.09)}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.btn{appearance:none;border:0;min-height:48px;padding:0 18px;border-radius:13px;font-weight:850;font-size:15px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}.primary{background:linear-gradient(180deg,var(--blue2),var(--blue));color:white;box-shadow:0 12px 30px rgba(47,129,247,.24)}.secondary{background:#141d2c;border:1px solid #2a3952;color:#e4edf9}.btn:disabled{opacity:.55;cursor:wait}
+    .notice{border-radius:16px;padding:14px 16px;margin:0 0 18px;font-size:14px;line-height:1.55}.notice.good{background:rgba(85,211,138,.09);border:1px solid rgba(85,211,138,.24);color:#a8edc5}.notice.bad{background:rgba(255,119,136,.09);border:1px solid rgba(255,119,136,.25);color:#ffbdc6}
+    .security{font-size:13px;line-height:1.65;color:var(--muted);margin:22px 0 0}.spinner{width:30px;height:30px;border:3px solid #263754;border-top-color:#6bacff;border-radius:50%;animation:spin .85s linear infinite;margin-bottom:16px}@keyframes spin{to{transform:rotate(360deg)}}
+    .hidden{display:none!important}
+    @media(max-width:560px){.wrap{padding-top:36px}.row{align-items:flex-start}.pill{margin-top:2px}.btn{width:100%}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand"><div class="mark">N</div><span>NexForge</span></div>
+    <section id="loading">
+      <div class="spinner"></div>
+      <h1>Connexion GitHub</h1>
+      <p class="lead">Préparation du connecteur NexForge…</p>
+    </section>
+    <section id="app" class="hidden">
+      <div id="notice"></div>
+      <h1 id="title">Donner accès à GitHub</h1>
+      <p id="lead" class="lead"></p>
+      <div id="cards" class="grid"></div>
+      <p class="security">La page est hébergée par GitHub Pages. NexForge utilise son backend uniquement pour stocker l’état du connecteur et les clés chiffrées. Aucun PAT GitHub n’est placé dans ton navigateur ni transmis à Claude.</p>
+    </section>
+  </main>
+<script>
+(() => {
+  const API = "https://ojbyvjqurlamplmujmyu.supabase.co/functions/v1/nxc-env-keys-probe";
+  const qs = new URLSearchParams(location.search);
+  const app = document.getElementById("app");
+  const loading = document.getElementById("loading");
+  const notice = document.getElementById("notice");
+  const title = document.getElementById("title");
+  const lead = document.getElementById("lead");
+  const cards = document.getElementById("cards");
+
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  async function api(name, params = {}) {
+    const url = new URL(API);
+    url.searchParams.set("api", name);
+    url.searchParams.set("format", "json");
+    for (const [k,v] of Object.entries(params)) if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
+    const res = await fetch(url, { method:"GET", mode:"cors", cache:"no-store", credentials:"omit" });
+    const data = await res.json().catch(() => ({ ok:false, error:"invalid_response" }));
+    if (!res.ok || data.ok === false) {
+      const err = new Error(data.error || ("HTTP " + res.status));
+      err.data = data;
+      throw err;
+    }
+    return data;
+  }
+
+  function showNotice(message, bad = false) {
+    notice.innerHTML = message ? '<div class="notice '+(bad?'bad':'good')+'">'+esc(message)+'</div>' : "";
+  }
+
+  function accountCard(name, subtitle, connected, installUrl) {
+    return '<div class="card"><div class="row"><div><div class="name">'+esc(name)+'</div><div class="sub">'+esc(subtitle)+'</div></div><span class="pill '+(connected?'ok':'no')+'">'+(connected?'Connecté':'À connecter')+'</span></div>'+
+      (!connected && installUrl ? '<div class="actions"><a class="btn primary" href="'+esc(installUrl)+'">Installer sur '+esc(name)+'</a></div>' : '')+
+      '</div>';
+  }
+
+  async function renderStatus(message = "") {
+    const state = await api("github-health");
+    const personal = !!state.installations?.Tresor562;
+    const org = !!state.installations?.["Nexus-tech-01"];
+    const done = personal && org;
+
+    title.textContent = done ? "GitHub est connecté." : (state.app_registered ? "Connecter tes repositories" : "Donner accès à GitHub");
+    lead.textContent = done
+      ? "Claude peut maintenant passer par NexForge pour lire et écrire sur les repositories autorisés."
+      : state.app_registered
+        ? "Installe la GitHub App NexForge sur ton compte personnel et sur l’organisation. Choisis « All repositories » dans les deux cas."
+        : "NexForge va créer sa propre GitHub App afin d’obtenir des droits de lecture et d’écriture sans utiliser de token personnel copié manuellement.";
+
+    if (message) showNotice(message);
+
+    const ticket = qs.get("ticket") || "";
+    if (!state.app_registered) {
+      cards.innerHTML = '<div class="card"><div class="name">GitHub App NexForge</div><div class="sub">Autorisation sécurisée via le flux officiel GitHub App Manifest.</div>'+
+        (ticket ? '<div class="actions"><button id="start" class="btn primary">Continuer vers GitHub</button></div>' : '<div class="actions"><button class="btn secondary" disabled>Nouveau lien requis</button></div>')+
+        '</div>';
+      const start = document.getElementById("start");
+      if (start) start.addEventListener("click", () => begin(ticket, start));
+    } else {
+      cards.innerHTML =
+        accountCard("Tresor562","Repositories personnels",personal,state.install_url) +
+        accountCard("Nexus-tech-01","Repositories de l’organisation",org,state.install_url);
+    }
+
+    loading.classList.add("hidden");
+    app.classList.remove("hidden");
+  }
+
+  async function begin(ticket, button) {
+    try {
+      button.disabled = true;
+      button.textContent = "Préparation…";
+      const data = await api("github-begin", { ticket });
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "https://github.com/settings/apps/new";
+      form.style.display = "none";
+      const manifest = document.createElement("input");
+      manifest.type = "hidden"; manifest.name = "manifest"; manifest.value = JSON.stringify(data.manifest);
+      const state = document.createElement("input");
+      state.type = "hidden"; state.name = "state"; state.value = data.state;
+      form.append(manifest, state);
+      document.body.appendChild(form);
+      form.submit();
+    } catch (e) {
+      button.disabled = false;
+      button.textContent = "Continuer vers GitHub";
+      showNotice(e.message === "setup_link_invalid_or_expired" ? "Ce lien a expiré. Demande-moi simplement un nouveau lien." : "Impossible de préparer la connexion GitHub : " + e.message, true);
+    }
+  }
+
+  async function processCallback() {
+    const action = qs.get("action") || "";
+    if (action === "manifest-callback") {
+      await api("github-manifest-callback", { code:qs.get("code") || "", state:qs.get("state") || "" });
+      history.replaceState({}, "", location.pathname);
+      return renderStatus("GitHub App NexForge créée. Installe-la maintenant sur les deux comptes.");
+    }
+    if (action === "installed") {
+      const result = await api("github-installed", { installation_id:qs.get("installation_id") || "" });
+      history.replaceState({}, "", location.pathname);
+      return renderStatus((result.login || "Compte GitHub") + " connecté à NexForge.");
+    }
+    return renderStatus();
+  }
+
+  processCallback().catch((e) => {
+    loading.classList.add("hidden");
+    app.classList.remove("hidden");
+    title.textContent = "Connexion GitHub impossible";
+    lead.textContent = "Le connecteur n’a pas pu terminer cette étape.";
+    cards.innerHTML = '<div class="card"><div class="name" style="color:var(--danger)">'+esc(e.message || e)+'</div><div class="sub">Tu peux revenir avec un nouveau lien sans modifier tes autres automatisations.</div></div>';
+  });
+})();
+</script>
+</body>
+</html>
