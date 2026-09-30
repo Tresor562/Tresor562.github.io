@@ -7,7 +7,9 @@
       "url": "https://tresor-hontonnou.zone.id/",
       "name": "Portfolio officiel de Trésor HONTONNOU",
       "inLanguage": "fr-FR",
-      "publisher": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "publisher": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
     },
     {
       "@type": "ProfilePage",
@@ -16,8 +18,12 @@
       "name": "Trésor HONTONNOU — profil officiel",
       "dateCreated": "2026-08-04",
       "dateModified": "2026-08-07",
-      "isPartOf": { "@id": "https://tresor-hontonnou.zone.id/#website" },
-      "mainEntity": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "isPartOf": {
+        "@id": "https://tresor-hontonnou.zone.id/#website"
+      },
+      "mainEntity": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
     },
     {
       "@type": "Person",
@@ -26,26 +32,65 @@
       "name": "Trésor HONTONNOU",
       "givenName": "Trésor",
       "familyName": "HONTONNOU",
-      "alternateName": ["Tresor Hontonnou", "Tresor562", "𝐌ꝛ⥔𝕿𝖗𝖊𝖘𝖔𝖗 🌹"],
+      "alternateName": [
+        "Tresor Hontonnou",
+        "Tresor562",
+        "𝐌ꝛ⥔𝕿𝖗𝖊𝖘𝖔𝖗 🌹"
+      ],
       "identifier": "Tresor562",
       "image": "https://tresor-hontonnou.zone.id/portrait.jpg",
       "jobTitle": "Développeur web et créateur de bots",
-      "description": "Développeur web béninois, créateur de bots et entrepreneur tech, créateur de KnowMe, Dark MD, Dark Nexus Bot, The Big Dipper et d'une collection 2026 de 20 prototypes numériques publics.",
+      "description": "Développeur web béninois, créateur de bots et entrepreneur tech, créateur de NexAI, Stacy, NexCanal Manager, NexDownloader, NexGroup Manager, NexStick, NexGame, NexWhisper, KnowMe et d'autres produits numériques.",
       "email": "mailto:hontonnoutresor@gmail.com",
-      "address": { "@type": "PostalAddress", "addressCountry": "BJ" },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "BJ"
+      },
       "sameAs": [
         "https://github.com/Tresor562",
         "https://t.me/tresor20001",
         "https://www.facebook.com/profile.php?id=100078681750878"
       ],
-      "knowsAbout": ["Développement web", "Bots WhatsApp", "Bots Telegram", "Automatisation", "Intelligence artificielle", "Cybersécurité", "Jeux web", "Outils développeur"],
-      "affiliation": { "@id": "https://tresor-hontonnou.zone.id/projets/nexus-tech#organization" },
+      "knowsAbout": [
+        "Développement web",
+        "Bots WhatsApp",
+        "Bots Telegram",
+        "Automatisation",
+        "Intelligence artificielle",
+        "Cybersécurité",
+        "Jeux web",
+        "Outils développeur",
+        "NexAI",
+        "Bots Telegram multi-session",
+        "Gestion de chaînes Telegram",
+        "Gestion de groupes Telegram",
+        "Téléchargement multimédia",
+        "Stickers Telegram",
+        "Jeux Telegram",
+        "Intelligence artificielle conversationnelle"
+      ],
+      "affiliation": {
+        "@id": "https://tresor-hontonnou.zone.id/projets/nexus-tech#organization"
+      },
       "subjectOf": [
-        { "@id": "https://tresor-hontonnou.zone.id/projets/knowme#project" },
-        { "@id": "https://tresor-hontonnou.zone.id/projets/dark-md#project" },
-        { "@id": "https://tresor-hontonnou.zone.id/projets/dark-nexus-bot#project" },
-        { "@id": "https://tresor-hontonnou.zone.id/projets/the-big-dipper#project" },
-        { "@id": "https://tresor-hontonnou.zone.id/projets-2026.html#page" }
+        {
+          "@id": "https://tresor-hontonnou.zone.id/projets/knowme#project"
+        },
+        {
+          "@id": "https://tresor-hontonnou.zone.id/projets/dark-md#project"
+        },
+        {
+          "@id": "https://tresor-hontonnou.zone.id/projets/dark-nexus-bot#project"
+        },
+        {
+          "@id": "https://tresor-hontonnou.zone.id/projets/the-big-dipper#project"
+        },
+        {
+          "@id": "https://tresor-hontonnou.zone.id/projets-2026.html#page"
+        },
+        {
+          "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#page"
+        }
       ]
     },
     {
@@ -54,8 +99,12 @@
       "url": "https://tresor-hontonnou.zone.id/projets-2026.html",
       "name": "20 projets numériques 2026 de Trésor HONTONNOU",
       "description": "Collection officielle de 20 prototypes numériques publics créés par Trésor HONTONNOU.",
-      "author": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" },
-      "isPartOf": { "@id": "https://tresor-hontonnou.zone.id/#website" }
+      "author": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      },
+      "isPartOf": {
+        "@id": "https://tresor-hontonnou.zone.id/#website"
+      }
     },
     {
       "@type": "SoftwareApplication",
@@ -65,7 +114,9 @@
       "applicationCategory": "SocialNetworkingApplication",
       "operatingSystem": "Web",
       "description": "Plateforme sociale créée par Trésor HONTONNOU pour aider les personnes à mieux se connaître grâce aux défis, aux jeux et aux conversations.",
-      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
     },
     {
       "@type": "SoftwareApplication",
@@ -76,7 +127,9 @@
       "operatingSystem": "WhatsApp",
       "description": "Bot WhatsApp public créé par Trésor HONTONNOU, avec des commandes utiles et des fonctions d'automatisation.",
       "codeRepository": "https://github.com/Tresor562/Dark-MD",
-      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
     },
     {
       "@type": "SoftwareApplication",
@@ -86,7 +139,9 @@
       "applicationCategory": "BotApplication",
       "operatingSystem": "Telegram",
       "description": "Bot Telegram créé par Trésor HONTONNOU pour la gestion et l'animation de communautés.",
-      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
     },
     {
       "@type": "SoftwareApplication",
@@ -96,7 +151,9 @@
       "applicationCategory": "BotApplication",
       "operatingSystem": "WhatsApp",
       "description": "Expérience conversationnelle WhatsApp créée par Trésor HONTONNOU.",
-      "creator": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
     },
     {
       "@type": "Organization",
@@ -104,7 +161,126 @@
       "url": "https://tresor-hontonnou.zone.id/projets/nexus-tech",
       "name": "Nexus Tech",
       "description": "Communauté technologique administrée par Trésor HONTONNOU.",
-      "member": { "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person" }
+      "member": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexai",
+      "name": "NexAI",
+      "url": "https://t.me/NexAi01_bot",
+      "sameAs": "https://t.me/NexAi01_bot",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "Telegram",
+      "description": "Plateforme Telegram multi-session réunissant automatisation, outils et services Nextech.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#stacy",
+      "name": "Stacy",
+      "url": "https://t.me/Stacytg_bot",
+      "sameAs": "https://t.me/Stacytg_bot",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "Telegram",
+      "description": "Assistante conversationnelle orientée contexte, interactions naturelles et intelligence artificielle.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexcanal",
+      "name": "NexCanal Manager",
+      "url": "https://t.me/the_big_dipper_bot",
+      "sameAs": "https://t.me/the_big_dipper_bot",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "Telegram",
+      "description": "Bot de gestion et d'automatisation de chaînes Telegram.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexdownloader",
+      "name": "NexDownloader",
+      "url": "https://t.me/TheNexDownloader_bot",
+      "sameAs": "https://t.me/TheNexDownloader_bot",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Telegram",
+      "description": "Outil de téléchargement et de traitement multimédia dans Telegram.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexgroup",
+      "name": "NexGroup Manager",
+      "url": "https://t.me/DarkNexus01_bot",
+      "sameAs": "https://t.me/DarkNexus01_bot",
+      "applicationCategory": "BotApplication",
+      "operatingSystem": "Telegram",
+      "description": "Bot d'administration, modération et automatisation de groupes Telegram.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexstick",
+      "name": "NexStick",
+      "url": "https://t.me/The_Nexus_techbot",
+      "sameAs": "https://t.me/The_Nexus_techbot",
+      "applicationCategory": "GraphicsApplication",
+      "operatingSystem": "Telegram",
+      "description": "Outils de création, conversion et gestion de stickers Telegram.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexgame",
+      "name": "NexGame",
+      "url": "https://t.me/TheNexGame_bot",
+      "sameAs": "https://t.me/TheNexGame_bot",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Telegram",
+      "description": "Jeux, quiz, défis et interactions sociales directement dans Telegram.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#nexwhisper",
+      "name": "NexWhisper",
+      "url": "https://t.me/NexWhisperBot",
+      "sameAs": "https://t.me/NexWhisperBot",
+      "applicationCategory": "CommunicationApplication",
+      "operatingSystem": "Telegram",
+      "description": "Bot de communication ciblée et discrète dans les groupes Telegram.",
+      "creator": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      }
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://tresor-hontonnou.zone.id/telegram-bots.html#page",
+      "url": "https://tresor-hontonnou.zone.id/telegram-bots.html",
+      "name": "NexAI et les 7 bots Telegram de Trésor HONTONNOU",
+      "description": "Présentation officielle de l'écosystème Telegram Nextech et liens directs vers chacun des huit projets.",
+      "author": {
+        "@id": "https://tresor-hontonnou.zone.id/tresor-hontonnou#person"
+      },
+      "isPartOf": {
+        "@id": "https://tresor-hontonnou.zone.id/#website"
+      }
     }
   ]
 }
