@@ -28,10 +28,10 @@ a{color:var(--purple)}button,input{font:inherit}button{border:0;border-radius:15
 </main>
 <main id="dashboard" class="hidden">
 <div class="head"><div><div class="eyebrow">Incident · continuité de service</div><h1 class="title">Infrastructure<br>en direct.</h1><p class="lead">État réel des nœuds, agents, bots, projets et tâches du registre NexControl. Mode diagnostic en lecture seule : aucune action de redémarrage ou de déploiement ne sera lancée tant que le VPS ne répond pas.</p></div><div class="actions"><button id="refresh">Actualiser</button><button class="secondary" id="disconnect">Déconnexion</button></div></div>
-<div class="notice">⚠️ Cette interface contourne le quota Supabase Edge, mais ne peut pas rallumer un VPS arrêté chez son hébergeur. Les horodatages des agents déterminent leur état réel.</div>
+<div class="notice">⚠️ Une absence de heartbeat signifie que NexControl ne communique plus avec son agent. Cela ne prouve pas que le VPS est éteint : les bots peuvent continuer à fonctionner normalement.</div>
 <section class="grid" id="metrics"></section>
 <section class="columns">
-<article class="panel"><h2>VPS et hôtes</h2><div id="hosts"></div></article>
+<article class="panel"><h2>Supervision des hôtes</h2><div id="hosts"></div></article>
 <article class="panel"><h2>Agents connectés</h2><div id="agents"></div></article>
 <article class="panel"><h2>Projets gérés</h2><div id="projects"></div></article>
 <article class="panel"><h2>Automatisations et planification</h2><div id="cron"></div></article>
@@ -69,7 +69,7 @@ async function request(key){
 function render(data){
  const m=data.metrics||{};
  show('metrics',[
- ['Agents enregistrés',m.agents],['Hôtes VPS',m.hostAgents],['Projets',m.projects],['Tâches agents en attente',m.pendingAgentJobs],['Tâches VPS en attente',m.pendingHostJobs]
+ ['Agents enregistrés',m.agents],['Agents hôtes enregistrés',m.hostAgents],['Projets',m.projects],['Tâches agents en attente',m.pendingAgentJobs],['Tâches VPS en attente',m.pendingHostJobs]
  ].map(x=>'<div class="panel"><div class="label">'+h(x[0])+'</div><div class="metric">'+h(text(x[1]))+'</div></div>').join(''));
  const hosts=empty(data.hosts);
  show('hosts',hosts.map(x=>row(x.name,x.hostname+' · Dernier signal : '+fmt(x.lastSeen),badge(x.online,true))).join(''));
@@ -84,7 +84,7 @@ function render(data){
  const hostsOnline=hosts.filter(x=>x.online).length;
  show('diagnostic',row('Passerelle PostgreSQL','Accès direct sans Edge Functions',badge(true,false))+
  row('Agents actifs',online+' / '+agents.length,badge(online>0,true))+
- row('VPS actifs',hostsOnline+' / '+hosts.length,badge(hostsOnline>0,true))+
+ row('Agents hôtes reliés',hostsOnline+' / '+hosts.length,badge(hostsOnline>0,true))+
  row('Passerelle Edge Supabase','Quota épuisé — HTTP 402','<span class="state bad">BLOQUÉE</span>'));
  $('checked').textContent=fmt(data.checkedAt);
  status('PostgreSQL accessible · '+fmt(data.checkedAt),false);
