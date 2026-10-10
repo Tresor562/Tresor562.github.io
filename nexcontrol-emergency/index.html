@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0e1420">
+<title>NexControl · Accès de secours indépendant</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#0e1420;color:#e8f0fa}*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at top right,#173441,#0e1420 55%)}
+main{width:min(100%,600px);padding:28px;border:1px solid #314356;border-radius:21px;background:#131d2b;box-shadow:0 20px 65px #0002}
+mark{display:inline-flex;background:#153b38;border-radius:999px;padding:7px 10px;color:#8be9cd;font-size:11px;letter-spacing:.08em;font-weight:700}
+h1{font-size:clamp(28px,6vw,42px);letter-spacing:-1.4px;line-height:1.1;margin:22px 0 12px}p{font-size:13px;line-height:1.7;color:#a7b8cd}
+.group{display:grid;gap:11px;margin:24px 0}
+a{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 17px;background:#202d3d;border:1px solid #354b61;color:#e8f5fa;border-radius:13px;text-decoration:none;font-size:13px;font-weight:650}
+a:hover{background:#2a4352;border-color:#609f9b}
+a.primary{background:#1c4d4a;border-color:#337e73;color:#acfae3}
+small{color:#7d91a9;font-size:11px;line-height:1.7;display:block;margin-top:15px}
+footer{padding-top:14px;margin-top:22px;border-top:1px solid #2f3d4c;font-size:11px;color:#7c90a9}
+</style></head><body>
+<main>
+<mark>ACCÈS INDÉPENDANT DE VERCEL</mark>
+<h1>NexControl<br>Point de secours</h1>
+<p>Cette page est hébergée sur GitHub Pages, pas sur Vercel. Elle permet de retrouver l’accès direct au VPS et à son hébergeur si l’interface Vercel est indisponible. Elle ne contient aucune clé ni mot de passe.</p>
+<div class="group">
+<a class="primary" href="https://nxc.31-56-85-53.sslip.io/nexcontrol/" rel="noopener noreferrer">Console NexControl directement sur le VPS <span>↗</span></a>
+<a href="https://nxc.31-56-85-53.sslip.io/nexai/" rel="noopener noreferrer">NexAI Connect directement sur le VPS <span>↗</span></a>
+<a href="https://31.56.85.53:9090/" rel="noopener noreferrer">Console de secours du VPS (port 9090) <span>↗</span></a>
+<a href="https://nexcontrol-nexus-vps.vercel.app/" rel="noopener noreferrer">Interface secondaire Vercel <span>↗</span></a>
+</div>
+<p><strong>Important :</strong> si la connexion directe échoue, cela peut venir de Nginx, du certificat HTTPS ou de l’accès réseau du VPS. Cette page n’établit pas de tunnel SSH et ne donne aucun droit d’administrateur à ChatGPT.</p>
+<small>Le panneau de secours peut afficher un avertissement de certificat selon sa configuration. Vérifie son certificat avant de saisir des identifiants. La connexion à la console VPS utilise uniquement les identifiants de ton hébergeur.</small>
+<footer>NexControl · Interface de secours · GitHub Pages</footer>
+</main></body></html>
