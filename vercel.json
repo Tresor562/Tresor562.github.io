@@ -29,5 +29,12 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://hontyx.hontonnoutresor.chatgpt.site/",
+      "permanent": true
+    }
   ]
 }
