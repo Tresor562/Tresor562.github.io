@@ -1,18 +1,21 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
+  "trailingSlash": true,
+  "redirects": [
     {
       "source": "/tresor-hontonnou",
-      "destination": "/"
+      "destination": "/",
+      "permanent": true
     },
     {
       "source": "/profils-officiels",
-      "destination": "/"
+      "destination": "/#contact",
+      "permanent": true
     },
     {
-      "source": "/projets/:path*",
-      "destination": "/projets-nexus-2026.html"
+      "source": "/telegram-bots.html",
+      "destination": "/#bots",
+      "permanent": true
     }
   ],
   "headers": [
@@ -28,13 +31,6 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "destination": "https://hontyx.hontonnoutresor.chatgpt.site/",
-      "permanent": true
     }
   ]
 }
